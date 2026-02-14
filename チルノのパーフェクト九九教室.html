@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>たのしい九九ゲーム</title>
+    <style>
+        body { text-align: center; font-family: 'Helvetica Neue', Arial, sans-serif; background-color: #fff9e6; color: #333; margin: 0; padding: 20px; }
+        h1 { color: #ff8c00; font-size: 24px; }
+        
+        /* 立ち絵の表示エリア */
+        #chara-container { margin: 20px auto; height: 250px; display: flex; align-items: center; justify-content: center; }
+        #chara-img { max-height: 100%; width: auto; border-radius: 10px; }
+
+        #message { font-size: 20px; font-weight: bold; color: #ff4500; height: 30px; margin-bottom: 10px; }
+        #question { font-size: 56px; margin: 10px; background: white; border-radius: 15px; padding: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        #answer-display { font-size: 32px; color: #007bff; margin: 15px; min-height: 40px; }
+        
+        /* ボタンのデザイン */
+        .keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; max-width: 300px; margin: 0 auto; }
+        .btn { padding: 20px; font-size: 24px; cursor: pointer; border: none; border-bottom: 4px solid #ccc; border-radius: 10px; background: #eee; transition: 0.1s; }
+        .btn:active { transform: translateY(2px); border-bottom: 0; }
+        .btn-orange { background: #ffcc00; border-color: #ccaa00; grid-column: span 2; }
+        .btn-gray { background: #bbb; border-color: #888; }
+    </style>
+</head>
+<body>
+
+    <h1>✨ チルノのパーフェクト九九教室 ✨</h1>
+
+    <div id="message">いっしょに おべんきょう しよう！</div>
+
+    <div id="chara-container">
+        <img id="chara-img" src="normal.png" alt="キャラクター">
+    </div>
+
+    <div id="question">? × ?</div>
+    
+    <div id="answer-display">答え：<span id="current-input"></span></div>
+
+    <div class="keypad">
+        <button class="btn" onclick="addNum(1)">1</button>
+        <button class="btn" onclick="addNum(2)">2</button>
+        <button class="btn" onclick="addNum(3)">3</button>
+        <button class="btn" onclick="addNum(4)">4</button>
+        <button class="btn" onclick="addNum(5)">5</button>
+        <button class="btn" onclick="addNum(6)">6</button>
+        <button class="btn" onclick="addNum(7)">7</button>
+        <button class="btn" onclick="addNum(8)">8</button>
+        <button class="btn" onclick="addNum(9)">9</button>
+        <button class="btn-gray" onclick="clearInput()">けす</button>
+        <button class="btn" onclick="addNum(0)">0</button>
+        <button class="btn" style="visibility: hidden;"></button> <button class="btn btn-orange" onclick="checkAnswer()">こたえあわせ！</button>
+    </div>
+
+    <script>
+        let num1, num2, answer;
+        let inputStr = "";
+        const chara = document.getElementById('chara-img');
+        const msg = document.getElementById('message');
+        const inputDisplay = document.getElementById('current-input');
+
+        // 新しい問題を出す
+        function nextQuestion() {
+            num1 = Math.floor(Math.random() * 9) + 1;
+            num2 = Math.floor(Math.random() * 9) + 1;
+            answer = num1 * num2;
+            document.getElementById('question').innerText = `${num1} × ${num2}`;
+            inputStr = "";
+            inputDisplay.innerText = "";
+            msg.innerText = "こたえを いれてね！";
+            chara.src = "normal.png"; // 【ふつうの顔】に戻す
+        }
+
+        // 数字を入力
+        function addNum(n) {
+            if(inputStr.length < 2) { // 九九の答えは最大2桁なので
+                inputStr += n;
+                inputDisplay.innerText = inputStr;
+            }
+        }
+
+        // 入力を消す
+        function clearInput() {
+            inputStr = "";
+            inputDisplay.innerText = "";
+        }
+
+        // 正解判定
+        function checkAnswer() {
+            if (inputStr === "") return; // 何も入力してないときは何もしない
+
+            if (parseInt(inputStr) === answer) {
+                msg.innerText = "せいかい！ すごいね！✨";
+                chara.src = "happy.png"; // 【笑顔】に変える
+                setTimeout(nextQuestion, 2000); // 2秒後に次の問題へ
+            } else {
+                msg.innerText = "おしい！ もういちど やってみよう！";
+                chara.src = "sad.png"; // 【残念な顔】に変える
+                inputStr = "";
+                inputDisplay.innerText = "";
+            }
+        }
+
+        // 起動時に一問目を出す
+        nextQuestion();
+    </script>
+</body>
+</html>

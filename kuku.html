@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>チルノのさんすう教室（九九編）</title>
     <style>
-        /* スマホでスクロール不要にするための調整 */
         body { 
             text-align: center; 
             font-family: 'Helvetica Neue', Arial, sans-serif; 
@@ -15,15 +14,14 @@
             padding: 10px;
             display: flex;
             flex-direction: column;
-            height: 100vh; /* 画面の高さぴったりにする */
+            height: 100vh; 
             box-sizing: border-box;
         }
 
         h1 { color: #0074d9; font-size: 18px; margin: 5px 0; }
         
-        /* 立ち絵エリア：高さを抑えて計算機を上にあげる */
         #chara-container { 
-            flex: 1; /* 余ったスペースをキャラに割り当てる */
+            flex: 1; 
             display: flex; 
             align-items: center; 
             justify-content: center; 
@@ -36,14 +34,14 @@
         #question { font-size: 40px; margin: 5px; background: white; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         #answer-display { font-size: 28px; color: #ff4136; margin: 5px; min-height: 35px; }
         
-        /* ボタン：少し小さくして収まりを良くする */
         .keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; max-width: 280px; margin: 0 auto; padding-bottom: 10px; }
         .btn { padding: 15px; font-size: 20px; cursor: pointer; border: none; border-bottom: 3px solid #ccc; border-radius: 8px; background: #fff; }
         .btn:active { transform: translateY(2px); border-bottom: 0; }
         .btn-orange { background: #7fdbff; border-color: #0074d9; grid-column: span 2; }
         
-        /* コピーライト（下部に固定） */
-        .copyright { font-size: 10px; color: #666; padding: 10px 0; line-height: 1.4; }
+        /* クレジット部分のスタイル */
+        .copyright { font-size: 9px; color: #666; padding: 10px 0; line-height: 1.5; background: rgba(255,255,255,0.5); border-top: 1px solid #ddd; }
+        .copyright a { color: #0074d9; text-decoration: none; }
     </style>
 </head>
 <body>
@@ -77,7 +75,9 @@
 
     <div class="copyright">
         この作品は、上海アリス幻樂団様及び東方Projectの二次創作です。<br>
-        本家様とは一切の関係はございません。
+        本家様とは一切の関係はございません。<br>
+        効果音：<a href="https://otologic.jp/" target="_blank">OtoLogic</a> / 
+        BGM：<a href="https://dougasoundfx.com/" target="_blank">動画Sound～えふぇく島～</a>
     </div>
 
     <audio id="bgm" src="bgm.mp3" loop></audio>
@@ -102,9 +102,9 @@
         }
 
         function addNum(n) {
-            // 最初の入力でBGMを再生（ブラウザの制限対策）
-            if (bgm.paused) bgm.play();
-            
+            if (bgm.paused) {
+                bgm.play().catch(e => console.log("Audio play failed"));
+            }
             if(inputStr.length < 2) {
                 inputStr += n;
                 document.getElementById('current-input').innerText = inputStr;
@@ -121,12 +121,12 @@
             if (parseInt(inputStr) === answer) {
                 msg.innerText = "さいきょー！正解ね！";
                 chara.src = "happy.png";
-                document.getElementById('se-correct').play(); // 正解音
+                document.getElementById('se-correct').play();
                 setTimeout(nextQuestion, 2000);
             } else {
                 msg.innerText = "あたい、まちがってないもん！";
                 chara.src = "sad.png";
-                document.getElementById('se-wrong').play(); // 不正解音
+                document.getElementById('se-wrong').play();
                 inputStr = "";
                 document.getElementById('current-input').innerText = "";
             }
